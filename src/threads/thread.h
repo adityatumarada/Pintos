@@ -90,10 +90,13 @@ struct thread
     int new_priority;
     int64_t wakeup_time;
     int priority;                       /* Priority. */
+    int initial_priority; 
     struct list_elem allelem;           /* List element for all threads list. */
 
     /* Shared between thread.c and synch.c. */
     struct list_elem elem;              /* List element. */
+    struct list locks_acquired;         /*All locks acquired currently by the thread*/
+    struct lock *lock_seeking;               /* the lock, thread is seeking*/
 
 #ifdef USERPROG
     /* Owned by userprog/process.c. */
@@ -139,9 +142,19 @@ int thread_get_nice (void);
 void thread_set_nice (int);
 int thread_get_recent_cpu (void);
 int thread_get_load_avg (void);
-void thread_priority_temporarily_up();
-void thread_priority_restore();
-void thread_set_next_wakeup();
-void thread_block_till(wakeup_time,start);
+void thread_priority_temporarily_up(void);
+void thread_priority_restore(void);
+void thread_set_next_wakeup(void);
+void thread_block_till(int64_t,int);
+void thread_check_priority(void);
+void thread_wakeup(int64_t);
+
+void update_ready_list(void);
+
+
+void thread_add_lock (struct lock *);
+void thread_remove_lock (struct lock *);
+void thread_donate_priority (struct thread *);
+void thread_update_priority (struct thread *);
 
 #endif /* threads/thread.h */
