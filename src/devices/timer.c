@@ -16,7 +16,7 @@
 #if TIMER_FREQ > 1000
 #error TIMER_FREQ <= 1000 recommended
 #endif
-
+#define RECALCULATION_FREQ 4
 /* Number of timer ticks since OS booted. */
 static int64_t ticks;
 
@@ -103,10 +103,10 @@ timer_sleep (int64_t ticks)
 
   ASSERT (intr_get_level () == INTR_ON);
   
-  thread_priority_temporarily_up() ;
-  thread_block_till(wakeup_time, start) ;
-  thread_set_next_wakeup();
-  thread_priority_restore();
+//  thread_priority_temporarily_up() ;
+  thread_block_till(wakeup_time,start) ;
+//  thread_set_next_wakeup();
+//  thread_priority_restore();
 }
 
 /* Sleeps for approximately MS milliseconds.  Interrupts must be
@@ -178,13 +178,30 @@ timer_print_stats (void)
 {
   printf ("Timer: %"PRId64" ticks\n", timer_ticks ());
 }
-
 /* Timer interrupt handler. */
 static void
 timer_interrupt (struct intr_frame *args UNUSED)
 {
   ticks++;
   thread_tick ();
+ /*if (thread_mlfqs)
+  {
+    if (ticks % TIMER_FREQ == 0)
+    {
+      mlfqs_increment ();
+      mlfqs_load_avg ();
+      mlfqs_recalculate ();
+    }
+    else if (ticks % RECALCULATION_FREQ == 0)
+    {
+      mlfqs_increment ();
+      mlfqs_priority (thread_current ());
+    }
+  }*/
+  /* RECALCULATION_FREQ (4) % TIME_SLICE (4) == 0, TIMER_FREQ (100) % TIME_SLICE (4) == 0 */
+  /* These settings are on purpose! */
+  /* When the priority is updated, the current thread is 100% to yield. */
+  /* So don't worry, nothing would go wrong. The priority scheduling still works. */  
 }
 
 /* Returns true if LOOPS iterations waits for more than one timer

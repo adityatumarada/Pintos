@@ -75,7 +75,7 @@ sema_down (struct semaphore *sema)
   ASSERT (!intr_context ());
 
   old_level = intr_disable ();
-  update_sema_list(sema);
+ // update_sema_list(sema);
   
   /* before inserting, it may happen that in between some priority of some thread changes so we need it in the sorted order. */
   update_sema_list(sema);       /* sort the sema's waiter list acc to priority. */
@@ -252,7 +252,8 @@ lock_acquire (struct lock *lock)
     t = thread_current ();
 
     t->lock_seeking = NULL;         
-    thread_add_lock (lock);                       /* add to thread's locks acquired and change lock's priority*/
+    if(!thread_mlfqs) thread_add_lock (lock);                       /* add to thread's locks acquired and change lock's priority*/
+
 
     lock->holder = t;
     intr_set_level (old_level);
@@ -292,7 +293,7 @@ lock_release (struct lock *lock)
   ASSERT (lock_held_by_current_thread (lock));
 
   old_level = intr_disable ();
-  thread_remove_lock (lock);
+  if(!thread_mlfqs) thread_remove_lock (lock);
   lock->holder = NULL;
 
   sema_up (&lock->semaphore);

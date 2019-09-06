@@ -91,6 +91,8 @@ struct thread
     int64_t wakeup_time;
     int priority;                       /* Priority. */
     int initial_priority; 
+    int recent_cpu;
+    int nice;
     struct list_elem allelem;           /* List element for all threads list. */
 
     /* Shared between thread.c and synch.c. */
@@ -156,5 +158,14 @@ void thread_add_lock (struct lock *);
 void thread_remove_lock (struct lock *);
 void thread_donate_priority (struct thread *);
 void thread_update_priority (struct thread *);
+
+/* Utilities for 4.4BSD Scheduler. */
+void mlfqs_priority (struct thread *t);
+void mlfqs_recent_cpu (struct thread *t);
+void mlfqs_load_avg (void);
+void mlfqs_recalculate (void);
+void mlfqs_increment (void);
+
+static void managerial_thread_work2(void *AUX);
 
 #endif /* threads/thread.h */
