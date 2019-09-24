@@ -20,10 +20,8 @@ void sema_self_test (void);
 /* Lock. */
 struct lock 
   {
-    struct list_elem elem;      /* List element to be inserted in the list of thread's acquired locks */
     struct thread *holder;      /* Thread holding lock (for debugging). */
     struct semaphore semaphore; /* Binary semaphore controlling access. */
-    int priority;               /* HIghest Priority among the threads seeking it but not holding it.*/
   };
 
 void lock_init (struct lock *);
@@ -44,10 +42,10 @@ void cond_signal (struct condition *, struct lock *);
 void cond_broadcast (struct condition *, struct lock *);
 
 /* Optimization barrier.
-
    The compiler will not reorder operations across an
    optimization barrier.  See "Optimization Barriers" in the
    reference guide for more information.*/
 #define barrier() asm volatile ("" : : : "memory")
 
 #endif /* threads/synch.h */
+

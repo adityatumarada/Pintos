@@ -1,0 +1,28 @@
+Writing command line to /tmp/6JVGavQFsy.dsk...
+squish-pty bochs -q
+========================================================================
+                       Bochs x86 Emulator 2.5.1
+              Built from SVN snapshot on January 6, 2012
+                  Compiled on Oct 10 2012 at 11:12:02
+========================================================================
+Kernel command line: -q run alarm-multiple
+Pintos booting with 4,096 kB RAM...
+374 pages available in kernel pool.
+373 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hd0:0: detected 1,008 sector (504 kB) disk, model "Generic 1234", serial "BXHD00011"
+Kernel PANIC at ../../filesys/filesys.c:23 in filesys_init(): hd0:1 (hdb) not present, file system initialization failed
+Call stack: 0xc002ff68Page fault at 0x17: not present error reading page in kernel context.
+Interrupt 0x0e (#PF Page-Fault Exception) at eip=0xc010636f
+ cr2=00000017 error=00000000
+ eax=00000017 ebx=00000017 ecx=c002fe94 edx=000003d4
+ esi=c010e367 edi=c0110163 esp=c010f66f ebp=c002ff28
+ cs=0008 ds=0010 es=0010 ss=ff68
+Kernel PANIC recursion at ../../userprog/exception.c:100 in kill().
+Timer: 106 ticks
+Thread: 30 idle ticks, 76 kernel ticks, 0 user ticks
+hd0:0: 0 reads, 0 writes
+Console: 877 characters output
+Keyboard: 0 keys pressed
+Exception: 1 page faults
+Powering off...
